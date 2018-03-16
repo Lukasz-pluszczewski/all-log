@@ -49,7 +49,7 @@ log({
 ```
 And you get this:
 
-![docs/images/screenshot.png]
+![docs/images/screenshot.png](docs/images/screenshot.png)
 
 ## FAQ
 #### Why this exists?
