@@ -47,7 +47,7 @@ const getNumberOfSpacesByLevel = level => (level + 1) * LEVEL_PADDING;
 
 const getPadding = level => getSpaces(getNumberOfSpacesByLevel(level));
 
-const getPrimitiveValue = (value, level) => {
+const getPrimitiveValue = (value, level, noPaddingOnZeroLevel) => {
   if (isUndefined(value)) {
     return 'undefined';
   }
@@ -64,10 +64,11 @@ const getPrimitiveValue = (value, level) => {
     return `${value}`;
   }
   if (isFunction(value)) {
+    const padding = !(noPaddingOnZeroLevel && level <= 0);
     const [firstLine, ...restLines] = value.toString().split('\n');
-    const intendFunc = indent(level ? getNumberOfSpacesByLevel(level + 1) : 0, true);
+    const intendFunc = indent(padding ? getNumberOfSpacesByLevel(level + 1) : 0, true);
     const funcString = [intendFunc(firstLine), intendFunc(restLines.join('\n'))].join('\n');
-    return `${level ? '\n' : ''}${funcString}${level ? '\n' : ''}`;
+    return `${padding ? '\n' : ''}${funcString}${padding ? '\n' : ''}`;
   }
   if (isSymbol(value) || isRegExp(value)) {
     return value.toString();
@@ -136,7 +137,7 @@ export const getString = (value, level = 0) => {
       dumpedText += `${getPadding(level - 1)}${iterable.closingBrackets}\n`;
     }
   } else {
-    dumpedText = `${getPrimitiveValue(value, level)}${level ? '' : '\n'}`;
+    dumpedText = `${getPrimitiveValue(value, level, true)}${level ? '' : '\n'}`;
   }
   return dumpedText;
 };

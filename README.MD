@@ -47,10 +47,13 @@ log({
   ],
 });
 ```
+And you get this:
+
+![docs/images/screenshot.png]
 
 ## FAQ
 #### Why this exists?
-I had enough struggle with logging strange thinks in Node and didn't find any library that quite suited my needs (or I did not look for it long enough ;) )
+I had enough struggle with logging strange things in Node and didn't find any library that quite suited my needs (or I did not look for it long enough ;) )
 
 #### Are there good alternatives?
 I'm absolutely sure there are: just google for a logger utility for node, or use node inspector.

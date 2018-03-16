@@ -88,7 +88,7 @@ describe('getString should stringify', () => {
       expect(getString([set])).to.be.equal(`[\n    0: [Set] [\n        0: 'value'\n    ]\n]\n`);
     });
     it('function', () => {
-      expect(getString([() => 'return'])).to.be.equal(`[\n    0: () => 'return'\n\n]\n`);
+      expect(getString([() => 'return'])).to.be.equal(`[\n    0: \n        () => 'return'\n        \n\n]\n`);
     });
   });
 
@@ -131,7 +131,7 @@ describe('getString should stringify', () => {
       expect(getString({ foo: set })).to.be.equal(`{\n    'foo': [Set] [\n        0: 'value'\n    ]\n}\n`);
     });
     it('function', () => {
-      expect(getString({ foo: () => 'return' })).to.be.equal(`{\n    'foo': () => 'return'\n\n}\n`);
+      expect(getString({ foo: () => 'return' })).to.be.equal(`{\n    'foo': \n        () => 'return'\n        \n\n}\n`);
     });
   });
 });
