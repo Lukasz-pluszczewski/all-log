@@ -1,6 +1,8 @@
 # all-log
 > Util to log all kinds of stuff in a readable way in node
 
+[![CircleCI](https://circleci.com/gh/Lukasz-pluszczewski/all-log.svg?style=svg)](https://circleci.com/gh/Lukasz-pluszczewski/all-log)
+
 Ever struggled with `[object Object]` logs? Or maybe you logged object as JSON but got `null` in case of `undefined` and `NaN`? So did I! With this tool you can output all values as human readable string including:
 - undefined
 - null
@@ -18,11 +20,10 @@ NOTE: This tool works in Node only. It is especially useful if you don't use [no
 
 NOTE2: I haven't figured out the way to iterate over WeakMap and WeakSet. If you know the way, please, let me know.
 
-
 ## Usage
 
 #### Installation
-```javascript
+```bash
 npm i all-log --save-dev
 ```
 
