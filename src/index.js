@@ -21,7 +21,13 @@ import size from 'lodash/size';
 import path from 'path';
 import chalk from 'chalk';
 
-import { STACKTRACE_PATH_REGEX, LEVEL_PADDING, INDENTATION_SPACES_REGEX, ITERABLE_OPTIONS } from './config';
+import {
+  STACKTRACE_PATH_REGEX,
+  LEVEL_PADDING,
+  INDENTATION_SPACES_REGEX,
+  ITERABLE_OPTIONS,
+  ERROR_MESSAGES,
+} from './config';
 
 const getSpaces = numberOfSpaces => times(numberOfSpaces, () => ' ').join('');
 
@@ -142,9 +148,9 @@ export const getString = (value, level = 0) => {
   return dumpedText;
 };
 
-const getCaller = () => {
+const getCaller = (stackLevel = 3) => {
   const error = new Error();
-  const callerPath = error.stack.split('\n')[3];
+  const callerPath = error.stack.split('\n')[stackLevel];
   const stackMatch = STACKTRACE_PATH_REGEX.exec(callerPath);
   if (stackMatch) {
     const [match, absoluteCallerPath, callerLine, callerColumn] = stackMatch;
@@ -159,6 +165,74 @@ const log = (...args) => {
   console.log(caller && chalk.gray.underline(`${caller.relativeCallerPath}:${caller.callerLine}:${caller.callerColumn}\n`)); // eslint-disable-line no-console
   const stringifiedValues = args.map(arg => getString(arg));
   return console.log(stringifiedValues.join('\n')); // eslint-disable-line no-console
+};
+
+export const getTimer = () => {
+  const timers = {};
+  const setGetTime = name => {
+    if (!name) {
+      log(ERROR_MESSAGES.timerNameRequired);
+      return ERROR_MESSAGES.timerNameRequired;
+    }
+    if (timers[name]) {
+      timers[name] = {
+        ...timers[name],
+        last: process.hrtime(),
+        totalDuration: process.hrtime(timers[name].start),
+        lastDuration: process.hrtime(timers[name].last),
+      };
+    } else {
+      const time = process.hrtime();
+      timers[name] = {
+        start: time,
+        last: time,
+        totalDuration: null,
+        lastDuration: null,
+      };
+    }
+    return timers[name];
+  };
+  const formatTime = (time, humanReadable = true) => {
+    if (!time) {
+      return time;
+    }
+    const seconds = time[0];
+    const miliseconds = time[1] / 1000000;
+    if (humanReadable) {
+      return `${seconds}s ${miliseconds}ms`;
+    }
+    return { s: seconds, ms: miliseconds };
+  };
+  const formatTimes = (times, humanReadable = true) => {
+    if (!times) {
+      return times;
+    }
+    return {
+      start: formatTime(times.start, humanReadable),
+      last: formatTime(times.last, humanReadable),
+      totalDuration: formatTime(times.totalDuration, humanReadable),
+      lastDuration: formatTime(times.lastDuration, humanReadable),
+    };
+  };
+  const timeLog = (name, tag, ...args) => {
+    console.log(chalk.blue.underline(`${name}${tag ? `:${tag}` : ''}`)); // eslint-disable-line no-console
+    return console.log(args.join('\n'), '\n'); // eslint-disable-line no-console
+  };
+
+  return {
+    getTime(name, humanReadable = false) {
+      return formatTimes(timers[name], humanReadable);
+    },
+    time(name) {
+      const time = setGetTime(name);
+      return formatTimes(time, false);
+    },
+    logTime(name, tag = '') {
+      const time = setGetTime(name);
+      timeLog(name, tag, formatTime(time.lastDuration, true), `Total: ${formatTime(time.totalDuration, true)}`);
+      return time;
+    },
+  };
 };
 
 export default log;
