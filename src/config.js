@@ -46,3 +46,7 @@ export const ITERABLE_OPTIONS = {
 export const LEVEL_PADDING = 4;
 export const INDENTATION_SPACES_REGEX = /^[ ]*/;
 export const STACKTRACE_PATH_REGEX = /(\/.+?):(\d+):(\d)/;
+
+export const ERROR_MESSAGES = {
+  timerNameRequired: 'Timer must have name to measure time',
+};
