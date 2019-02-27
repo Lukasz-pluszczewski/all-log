@@ -1,7 +1,7 @@
 {
   "name": "all-log",
-  "version": "1.1.0",
-  "description": "",
+  "version": "1.1.1",
+  "description": "Util to log all kinds of stuff in a readable way in node",
   "repository": {
     "type": "git",
     "url": "https://github.com/Lukasz-pluszczewski/all-log"
